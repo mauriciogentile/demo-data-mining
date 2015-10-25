@@ -20,8 +20,8 @@
   </DataSourceViews>
   <MiningModels>
     <ProjectItem>
-      <Name>PricingPrediction.dmm</Name>
-      <FullPath>PricingPrediction.dmm</FullPath>
+      <Name>PricePrediction.dmm</Name>
+      <FullPath>PricePrediction.dmm</FullPath>
     </ProjectItem>
   </MiningModels>
   <Configurations>

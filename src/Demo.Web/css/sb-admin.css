@@ -227,3 +227,10 @@ ul.alert-dropdown {
 .page-header {
     margin-top: 10px;
 }
+
+.has-error .form-control, .input-validation-error {
+   border: 1px solid #f44336 !important;
+   -webkit-box-shadow: none !important;
+   -ms-box-shadow: none !important;
+   box-shadow: none !important;
+}

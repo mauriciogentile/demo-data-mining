@@ -45,12 +45,19 @@ namespace Demo.Web.Controllers.Api
         {
             var query = string.Format(Queries.PricePrediction, property.ToSingletonQuery());
             var prediction = _cache.GetOrAdd(query, key => Convert.ToInt32(ExecuteScalar(query)));
+            if (prediction == 0)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new StringContent("Imposible predecir valor!")
+                };
+            }
             var variaton = prediction * AcceptableVariation;
             if (Math.Abs(property.Price - prediction) > variaton)
             {
                 return new HttpResponseMessage(HttpStatusCode.NotAcceptable)
                 {
-                    Content = new StringContent(GetAcceptableRangeString(prediction))
+                    Content = new StringContent(GetAcceptableRangeString(prediction, "C0"))
                 };
             }
             return new HttpResponseMessage(HttpStatusCode.OK);
@@ -76,11 +83,11 @@ namespace Demo.Web.Controllers.Api
             }
         }
 
-        static string GetAcceptableRangeString(double value)
+        static string GetAcceptableRangeString(double value, string format = null)
         {
             var min = value - (value * AcceptableVariation);
             var max = value + (value * AcceptableVariation);
-            return string.Format("Rango aceptable de '{0}' a '{1}'", min, max);
+            return string.Format("Rango aceptable de '{0}' a '{1}'", min.ToString(format), max.ToString(format));
         }
     }
 }
