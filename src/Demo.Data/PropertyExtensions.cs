@@ -43,12 +43,11 @@ namespace Demo.Data
                     break;
             }
 
-
             price += (property.TotalSquareMts - property.SquareMts) * LandSquareMtRefPrice;
-            price *= property.DistanceToStation < 1000 ? 1.5 : (property.DistanceToStation < 2000 ? 1.25 : 1);
-            price *= 1 - (property.Age * .005);
+            price *= property.DistanceToStation < 1000 ? 1.25 : (property.DistanceToStation < 2000 ? 1.1 : 1);
+            price *= 1 - (property.Age * .0005);
             price *= property.Bathrooms * 1.05;
-            price *= property.Bedrooms * 1.1;
+            price *= property.Bedrooms * 1.05;
             price *= property.HasBackyard ? 1.2 : 1;
             price *= property.HasParking ? 1.2 : 1;
             price *= property.WithFurniture ? 1.1 : 1;
@@ -106,7 +105,6 @@ namespace Demo.Data
                     property.Age = random.NextInt16(0, 25);
                     property.Bathrooms = random.NextInt16(1, 3);
                     property.Bedrooms = random.NextInt16(1, 3);
-                    property.DistanceToStation = random.NextInt16(50, 1000);
                     property.SquareMts = roomSize * property.Bedrooms + random.NextInt16(50, 80);
                     property.HasParking = random.NextDouble() < .2;
                     property.TotalSquareMts = property.SquareMts;
@@ -116,7 +114,6 @@ namespace Demo.Data
                     property.Age = random.NextInt16(0, 50);
                     property.Bathrooms = random.NextInt16(1, 4);
                     property.Bedrooms = random.NextInt16(2, 4);
-                    property.DistanceToStation = random.NextInt16(50, 2000);
                     property.SquareMts = roomSize * property.Bedrooms + random.NextInt16(100, 250);
                     property.TotalSquareMts = property.SquareMts + random.NextInt16(20, 60);
                     property.HasParking = random.NextDouble() < .8;
@@ -126,7 +123,6 @@ namespace Demo.Data
                     property.Age = random.NextInt16(0, 50);
                     property.Bathrooms = random.NextInt16(2, 4);
                     property.Bedrooms = random.NextInt16(3, 5);
-                    property.DistanceToStation = random.NextInt16(100, 3000);
                     property.SquareMts = roomSize * property.Bedrooms + random.NextInt16(150, 250);
                     property.TotalSquareMts = property.SquareMts + random.Next(50, 200);
                     property.HasParking = true;
@@ -137,7 +133,6 @@ namespace Demo.Data
                     property.Age = random.NextInt16(20, 50);
                     property.Bathrooms = baths == 0 ? 1 : baths;
                     property.Bedrooms = random.NextInt16(2, 3);
-                    property.DistanceToStation = random.NextInt16(50, 2000);
                     property.SquareMts = roomSize * property.Bedrooms + random.NextInt16(100, 300);
                     property.TotalSquareMts = property.SquareMts + random.Next(10, 50);
                     property.HasParking = random.NextDouble() < .4;
@@ -149,6 +144,7 @@ namespace Demo.Data
                 property.Bathrooms = property.Bedrooms;
             }
 
+            property.DistanceToStation = random.NextInt16(50, 3000);
             property.HasBackyard = property.TotalSquareMts - property.SquareMts > 20;
         }
 
