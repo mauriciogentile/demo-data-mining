@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<form ng-controller="newPropertyCtrl" role="form" data-toggle="validator">
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label>Tipo de Publicación</label>
+                <select name="operationType" ng-model="operationType" class="form-control">
+                    <option value="Rent">Renta</option>
+                    <option value="Sale">Venta</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Numero de Habitaciones</label>
+                <input required data-remote="api/property/validate/{{propertyType}}" ng-model="bedrooms" name="bedrooms" type="number" class="form-control">
+                <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group">
+                <label>Numero de Baños</label>
+                <input required data-remote="api/property/validate/apartment" name="bathrooms" type="number" class="form-control" value="1">
+                <div class="help-block with-errors"></div>
+            </div>
+            <div class="form-group">
+                <label>Sup. Cubierta</label>
+                <div class="input-group">
+                    <input required name="squareMts" type="number" class="form-control" value="50">
+                    <div class="input-group-addon">m²</div>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Sup. Total</label>
+                <div class="input-group">
+                    <input required name="totalSquareMts" type="number" class="form-control" value="50">
+                    <div class="input-group-addon">m²</div>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Precio</label>
+                <div class="input-group">
+                    <div class="input-group-addon">$</div>
+                    <input required data-remote="api/property/validate/price" data-remote-send-all name="price" ng-model="price" type="number" class="form-control">
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label>Tipo de Propiedad</label>
+                <select name="propertyType" ng-model="propertyType" class="form-control">
+                    <option value="Apartment">Apartamento</option>
+                    <option value="Detached">Casa</option>
+                    <option value="Attached">Duplex</option>
+                    <option value="Maisonette">Maisonette</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Distancia a Estación</label>
+                <div class="input-group">
+                    <input required name="distanceToStation" ng-model="distanceToStation" type="number" class="form-control" value="100">
+                    <div class="input-group-addon">m</div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label>Antiguedad del Inmueble</label>
+                <div class="input-group">
+                    <input required name="age" ng-model="age" type="text" class="form-control" placeholder="antiguedad en años">
+                    <div class="input-group-addon">años</div>
+                    <div class="help-block with-errors"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Zona</label>
+                <select name="zoneReputation" ng-model="zoneReputation" class="form-control">
+                    <option value="Bad">AB3219 (mala)</option>
+                    <option value="Fair">AB3212 (regular)</option>
+                    <option value="Good">TU5654 (buena)</option>
+                    <option value="Excellent">AA1236 (excelente)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Otros</label>
+                <br />
+                <label class="checkbox-inline">
+                    <input name="hasParking" ng-model="hasParking" type="checkbox" value="">Con Parqueo
+                </label>
+                <label class="checkbox-inline">
+                    <input name="withFurniture" ng-model="withFurniture" type="checkbox" value="">Amoblado
+                </label>
+                <label class="checkbox-inline">
+                    <input name="hasBackyard" ng-model="hasBackyard" type="checkbox" value="">Patio
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <hr class="divider" />
+        <div class="col-lg-5">
+            <button type="submit" class="btn btn-primary">Publicar</button>
+        </div>
+    </div>
+</form>
+

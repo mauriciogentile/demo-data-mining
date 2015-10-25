@@ -1,0 +1,4 @@
+SELECT [Price], PredictProbability([Price]) AS [Probability]
+From [Properties Model DT]
+NATURAL PREDICTION JOIN
+(SELECT 0 AS [Age], 70 AS [Square Mts],'Sale' AS [Operation Type], 'Bad' AS [Zone Reputation]) AS t
