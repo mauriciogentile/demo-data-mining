@@ -23,6 +23,10 @@
       <Name>PricePrediction.dmm</Name>
       <FullPath>PricePrediction.dmm</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>SizePrediction.dmm</Name>
+      <FullPath>SizePrediction.dmm</FullPath>
+    </ProjectItem>
   </MiningModels>
   <Configurations>
     <Configuration>

@@ -1,0 +1,259 @@
+﻿<MiningStructure xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" dwd:design-time-name="4350cd39-5f32-49ce-bb34-bd4be214a4db" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>SizePrediction</ID>
+  <Name>SizePrediction</Name>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <Annotations>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:CaseTableName</Name>
+      <Value>dbo_Properties</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowFriendlyNames</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramLayout</Name>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowRelationshipNames</Name>
+      <Value>false</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:UseDiagramDefaultLayout</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortLeft</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortTop</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingLeft</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingTop</Name>
+      <Value>0</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramZoom</Name>
+      <Value>100</Value>
+    </Annotation>
+  </Annotations>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Source xsi:type="DataSourceViewBinding" dwd:design-time-name="f22869bc-4e23-41e6-8770-66ac59a9365a">
+    <DataSourceViewID>Demo</DataSourceViewID>
+  </Source>
+  <Columns>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="ccf54933-36dd-4da7-b418-7c15cf7ac584">
+      <ID>Age</ID>
+      <Name>Age</Name>
+      <Type>Long</Type>
+      <Content>Continuous</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="3e7e3501-5d91-47ee-bffe-2e332088d090">
+          <DataType>Integer</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="6e346b44-7924-46b1-9f81-0cddb9940db5">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>Age</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="dd50e83b-2c93-44be-b758-6a14f84b601d">
+      <ID>Bathrooms</ID>
+      <Name>Bathrooms</Name>
+      <Type>Long</Type>
+      <Content>Continuous</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="b57df6bb-013c-42a6-9aae-037326f11fec">
+          <DataType>Integer</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="36d8b21c-875d-41c0-8db7-c1fa766ef3c3">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>Bathrooms</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="6b1b1768-dc90-4dc7-8ef9-21aa07622564">
+      <ID>Bedrooms</ID>
+      <Name>Bedrooms</Name>
+      <Type>Long</Type>
+      <Content>Continuous</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="ebdc08da-9bf3-4865-8b8d-925943d684b4">
+          <DataType>Integer</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="ab4a3573-6e90-4ec3-8b19-f593a24b6965">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>Bedrooms</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="3b961fbd-7f3b-49d7-8841-b66447adcffd">
+      <ID>Has Backyard</ID>
+      <Name>Has Backyard</Name>
+      <Type>Boolean</Type>
+      <Content>Discrete</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="e36a605b-748c-488e-b5a2-7a6a1e0b6709">
+          <DataType>Boolean</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="9f642ebd-1446-44bf-ba1d-2fd3664992b4">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>HasBackyard</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="10d9c5bc-c215-44a5-a05f-c13b09c64a41">
+      <ID>Has Parking</ID>
+      <Name>Has Parking</Name>
+      <Type>Boolean</Type>
+      <Content>Discrete</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="ce3c2d19-aa56-417c-a69e-bfbc1857b129">
+          <DataType>Boolean</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="7c63d198-c0f1-4225-86b1-a22f6be0b2ef">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>HasParking</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="5734f8f1-bd74-4b61-a5d3-fb76044fc82f">
+      <ID>Id</ID>
+      <Name>Id</Name>
+      <IsKey>true</IsKey>
+      <Type>Long</Type>
+      <Content>Key</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="4431641a-583c-4f8e-8fc1-9ac9b362693b">
+          <DataType>Integer</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="ca6bdd3b-0e41-45be-8219-8ae7f2b6fbf3">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>Id</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="7a55e569-f87a-4e26-b140-c5c128e2efd1">
+      <ID>Property Type</ID>
+      <Name>Property Type</Name>
+      <Type>Text</Type>
+      <Content>Discrete</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="d78a8b31-9c6b-41ab-ba5a-4712904d7d44">
+          <DataType>WChar</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="4944803b-f898-42ca-9425-94196a45991e">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>PropertyType</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="1d8164d6-6e9c-42d4-849d-752626b232a4">
+      <ID>Square Mts</ID>
+      <Name>Square Mts</Name>
+      <Type>Long</Type>
+      <Content>Continuous</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="112dbc3d-c2e4-4970-b07a-c1b2ec80fea6">
+          <DataType>Integer</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="7a639b7b-e340-4852-8099-18479b136ada">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>SquareMts</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+    <Column xsi:type="ScalarMiningStructureColumn" dwd:design-time-name="d0b733dc-a5d8-44d2-ba15-46f7401b2f6a">
+      <ID>Zone Reputation</ID>
+      <Name>Zone Reputation</Name>
+      <Type>Text</Type>
+      <Content>Discrete</Content>
+      <KeyColumns>
+        <KeyColumn dwd:design-time-name="874be355-779f-4d8f-ae23-a99a3402e3b5">
+          <DataType>WChar</DataType>
+          <DataSize>-1</DataSize>
+          <Source xsi:type="ColumnBinding" dwd:design-time-name="8db4a4f4-b445-4f07-8ece-fcecbe53c22a">
+            <TableID>dbo_Properties</TableID>
+            <ColumnID>ZoneReputation</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+    </Column>
+  </Columns>
+  <MiningModels>
+    <MiningModel dwd:design-time-name="f3009c5f-575b-4d19-8748-54c49e1a2fe5">
+      <ID>SizePredictionModel</ID>
+      <Name>SizePredictionModel</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Algorithm>Microsoft_Decision_Trees</Algorithm>
+      <Columns>
+        <Column dwd:design-time-name="7240e4c9-2eed-4f6e-8bc5-13f191296118">
+          <ID>Age</ID>
+          <Name>Age</Name>
+          <SourceColumnID>Age</SourceColumnID>
+          <ModelingFlags>
+            <ModelingFlag>REGRESSOR</ModelingFlag>
+          </ModelingFlags>
+        </Column>
+        <Column dwd:design-time-name="7ae32e8d-a5d0-4bbe-a371-4454c04ff27d">
+          <ID>Bedrooms</ID>
+          <Name>Bedrooms</Name>
+          <SourceColumnID>Bedrooms</SourceColumnID>
+          <ModelingFlags>
+            <ModelingFlag>REGRESSOR</ModelingFlag>
+          </ModelingFlags>
+        </Column>
+        <Column dwd:design-time-name="3398af03-f310-449e-a9b1-f028aafac0d5">
+          <ID>Has Backyard</ID>
+          <Name>Has Backyard</Name>
+          <SourceColumnID>Has Backyard</SourceColumnID>
+        </Column>
+        <Column dwd:design-time-name="fabf891f-cfda-4540-8585-2148e6e93fad">
+          <ID>Id</ID>
+          <Name>Id</Name>
+          <SourceColumnID>Id</SourceColumnID>
+          <Usage>Key</Usage>
+        </Column>
+        <Column dwd:design-time-name="cc863c59-bd9b-48f6-b85e-f506ccb877ba">
+          <ID>Property Type</ID>
+          <Name>Property Type</Name>
+          <SourceColumnID>Property Type</SourceColumnID>
+        </Column>
+        <Column dwd:design-time-name="ad9629ba-d022-41c0-9bc5-24962e8b9e70">
+          <ID>Square Mts</ID>
+          <Name>Square Mts</Name>
+          <SourceColumnID>Square Mts</SourceColumnID>
+          <Usage>PredictOnly</Usage>
+          <ModelingFlags>
+            <ModelingFlag>REGRESSOR</ModelingFlag>
+          </ModelingFlags>
+        </Column>
+        <Column dwd:design-time-name="d8a10c8f-6d60-4eaa-a889-7e5ed462762f">
+          <ID>Zone Reputation</ID>
+          <Name>Zone Reputation</Name>
+          <SourceColumnID>Zone Reputation</SourceColumnID>
+        </Column>
+      </Columns>
+    </MiningModel>
+  </MiningModels>
+  <ddl100_100:HoldoutMaxPercent>50</ddl100_100:HoldoutMaxPercent>
+</MiningStructure>

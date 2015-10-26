@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
@@ -23,44 +22,27 @@ namespace Demo.Web.Controllers.Api
         }
 
         [HttpGet]
-        [Route("api/property/validate/{propertyTye}")]
-        public HttpResponseMessage ValidateBedrooms(PropertyType propertyTye, int bedrooms)
+        [Route("api/property/size/predict")]
+        public HttpResponseMessage ValidateSize([FromUri]Property property)
         {
-            /*var query = string.Format(Queries.BedroomPrediction, propertyTye);
-            var prediction = ExecuteScalar(query);
-            var variaton = prediction * AcceptableVariation;
-            if (Math.Abs(bedrooms - variaton) > AcceptableVariation)
+            var query = string.Format(Queries.SizePrediction, property.ToSingletonQuery());
+            var prediction = _cache.GetOrAdd(query, key => Convert.ToInt32(ExecuteScalar(query)));
+            return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotAcceptable)
-                {
-                    Content = new StringContent(GetAcceptableRangeString(prediction))
-                };
-            }*/
-            return new HttpResponseMessage(HttpStatusCode.OK);
+                Content = new StringContent(prediction.ToString("D0"))
+            };
         }
 
         [HttpGet]
-        [Route("api/property/validate/price")]
-        public HttpResponseMessage ValidateBedrooms([FromUri]Property property)
+        [Route("api/property/price/predict")]
+        public HttpResponseMessage PredictPrice([FromUri]Property property)
         {
             var query = string.Format(Queries.PricePrediction, property.ToSingletonQuery());
             var prediction = _cache.GetOrAdd(query, key => Convert.ToInt32(ExecuteScalar(query)));
-            if (prediction == 0)
+            return new HttpResponseMessage(HttpStatusCode.OK)
             {
-                return new HttpResponseMessage(HttpStatusCode.NotFound)
-                {
-                    Content = new StringContent("Imposible predecir valor!")
-                };
-            }
-            var variaton = prediction * AcceptableVariation;
-            if (Math.Abs(property.Price - prediction) > variaton)
-            {
-                return new HttpResponseMessage(HttpStatusCode.NotAcceptable)
-                {
-                    Content = new StringContent(GetAcceptableRangeString(prediction, "C0"))
-                };
-            }
-            return new HttpResponseMessage(HttpStatusCode.OK);
+                Content = new StringContent(prediction.ToString("D0"))
+            };
         }
 
         [HttpGet]
@@ -81,13 +63,6 @@ namespace Demo.Web.Controllers.Api
                 var result = Convert.ToDouble(command.ExecuteScalar() ?? 0);
                 return result < 0 ? 0 : result;
             }
-        }
-
-        static string GetAcceptableRangeString(double value, string format = null)
-        {
-            var min = value - (value * AcceptableVariation);
-            var max = value + (value * AcceptableVariation);
-            return string.Format("Rango aceptable de '{0}' a '{1}'", min.ToString(format), max.ToString(format));
         }
     }
 }

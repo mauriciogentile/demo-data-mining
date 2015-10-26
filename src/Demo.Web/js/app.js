@@ -1,52 +1,104 @@
 ﻿var app = angular.module("Zupla", ["ng"]);
 
 app.controller("newPropertyCtrl", function ($scope, $http) {
-    $scope.bedrooms = 1;
+    var acceptableVariation = 0.1;
+
+    $scope.bedrooms = 2;
     $scope.bathrooms = 1;
     $scope.operationType = "Sale";
     $scope.propertyType = "Apartment";
-    $scope.distanceToStation = 100;
-    $scope.squareMts = 100;
-    $scope.age = 10;
+    $scope.distanceToStation = "";
+    $scope.squareMts = "";
+    $scope.age = "";
     $scope.zoneReputation = "Good";
     $scope.hasParking = false;
     $scope.withFurniture = false;
     $scope.hasBackyard = false;
-    $scope.price = 0;
+    $scope.price = "";
 
     $scope.invalidPrice = false;
     $scope.priceUnknown = false;
-    $scope.validationMessage = "";
+    $scope.priceValidationMessage = "";
 
-    $scope.$watch("bedrooms", validatePrice);
-    $scope.$watch("bathrooms", validatePrice);
-    $scope.$watch("squareMts", validatePrice);
-    $scope.$watch("operationType", validatePrice);
-    $scope.$watch("propertyType", validatePrice);
-    $scope.$watch("distanceToStation", validatePrice);
-    $scope.$watch("age", validatePrice);
-    $scope.$watch("zoneReputation", validatePrice);
-    $scope.$watch("hasParking", validatePrice);
-    $scope.$watch("price", validatePrice);
+    $scope.invalidSize = false;
+    $scope.unknownSize = false;
+    $scope.sizeValidationMessage = "";
+
+    $scope.$watch("bedrooms", function () {
+        delayExecution(validatePriceAndSize);
+    });
+
+    $scope.$watch("bathrooms", function () {
+        delayExecution(validatePriceAndSize);
+    });
+
+    $scope.$watch("squareMts", function () {
+        delayExecution(validatePriceAndSize);
+    });
+
+    $scope.$watch("operationType", function () {
+        delayExecution(validatePrice);
+    });
+
+    $scope.$watch("propertyType", function () {
+        delayExecution(validatePriceAndSize);
+    });
+
+    $scope.$watch("distanceToStation", function() {
+        delayExecution(validatePrice);
+    });
+
+    $scope.$watch("age", function () {
+        delayExecution(validatePrice);
+    });
+
+    $scope.$watch("zoneReputation", function () {
+        delayExecution(validatePrice);
+    });
+
+    $scope.$watch("hasParking", function () {
+        delayExecution(validatePrice);
+    });
+
+    $scope.$watch("price", function () {
+        delayExecution(validatePrice);
+    });
+
+    function validatePriceAndSize() {
+        validatePrice();
+        validateSize();
+    }
 
     function validatePrice() {
-        if (!$scope.price) return;
         $scope.invalidPrice = false;
         $scope.priceUnknown = false;
-        $scope.validationMessage = "";
+        $scope.priceValidationMessage = "";
+
+        if (!$scope.price) return;
+
         var param = $.param(getParams());
-        $http.get("api/property/validate/price?" + param).then(function () {
-            $scope.invalidPrice = false;
-            $scope.validationMessage = "";
+        $http.get("api/property/price/predict?" + param).then(function (response) {
+            processPricePrediction(response.data);
+            console.log(data);
         }, function (error) {
-            if (error.status == 404) {
-                $scope.priceUnknown = true;
-                $scope.validationMessage = error.responseText || error.data;
-            }
-            if (error.status == 406) {
-                $scope.invalidPrice = true;
-                $scope.validationMessage = error.responseText || error.data;
-            }
+            console.log(error);
+        });
+    };
+
+    function validateSize() {
+
+        $scope.invalidSize = false;
+        $scope.unknownSize = false;
+        $scope.sieValidationMessage = "";
+
+        if (!$scope.squareMts) return;
+
+        var param = $.param(getParams());
+        $http.get("api/property/size/predict?" + param).then(function (response) {
+            processSizePrediction(response.data);
+            console.log(data);
+        }, function (error) {
+            console.log(error);
         });
     };
 
@@ -59,4 +111,53 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
         }
         return result;
     };
+
+    var processPricePrediction = function (prediction) {
+        $scope.invalidPrice = false;
+        $scope.priceValidationMessage = "";
+        $scope.priceUnknown = false;
+        if (prediction == 0) {
+            $scope.priceValidationMessage = "Imposible predecir valor!";
+            $scope.priceUnknown = true;
+            return;
+        }
+        var variaton = prediction * acceptableVariation;
+        if (Math.abs($scope.price - prediction) > variaton) {
+            $scope.invalidPrice = true;
+            $scope.priceValidationMessage = getAcceptableRangeString(prediction);
+        }
+    };
+
+    var processSizePrediction = function (prediction) {
+        $scope.invalidSize = false;
+        $scope.sizeValidationMessage = "";
+        $scope.unknownSize = false;
+        if (prediction == 0) {
+            $scope.sizeValidationMessage = "Imposible predecir valor!";
+            $scope.unknownSize = true;
+            return;
+        }
+        var variaton = prediction * acceptableVariation;
+        if (Math.abs($scope.squareMts - prediction) > variaton) {
+            $scope.invalidSize = true;
+            $scope.sizeValidationMessage = getAcceptableRangeString(prediction);
+        }
+    };
+
+    var getAcceptableRangeString = function (value) {
+        value = parseInt(value);
+        var min = value - (value * acceptableVariation);
+        var max = value + (value * acceptableVariation);
+        return "Rango aceptable de '" + numberWithCommas(Math.ceil(min)) + "' a '" + numberWithCommas(Math.floor(max)) + "'";
+    }
+
+    var numberWithCommas = function (x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    var delayTimer;
+    function delayExecution(fn) {
+        clearTimeout(delayTimer);
+        delayTimer = setTimeout(fn, 1000);
+    }
 });

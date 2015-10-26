@@ -14,21 +14,21 @@
             </div>
             <div class="form-group">
                 <label>Numero de Habitaciones</label>
-                <input required data-remote="api/property/validate/{{propertyType}}" ng-model="bedrooms" name="bedrooms" type="number" class="form-control">
+                <input ng-model="bedrooms" name="bedrooms" type="number" class="form-control">
                 <div class="help-block with-errors"></div>
             </div>
             <div class="form-group">
                 <label>Numero de Baños</label>
-                <input required data-remote="api/property/validate/apartment" ng-model="bathrooms" name="bathrooms" type="number" class="form-control">
+                <input ng-model="bathrooms" name="bathrooms" type="number" class="form-control">
                 <div class="help-block with-errors"></div>
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="{'has-error' : invalidSize, 'has-warning': unknownSize}">
                 <label>Sup. Cubierta</label>
                 <div class="input-group">
                     <input required name="squareMts" ng-model="squareMts" type="number" class="form-control">
                     <div class="input-group-addon">m²</div>
-                    <div class="help-block with-errors"></div>
                 </div>
+                <div class="help-block with-errors" ng-show="invalidSize || unknownSize">{{sizeValidationMessage}}</div>
             </div>
             <div class="form-group">
                 <label>Otros</label>
@@ -49,7 +49,7 @@
                     <div class="input-group-addon">$</div>
                     <input required name="price" ng-model="price" type="number" step="0.01" class="form-control">
                 </div>
-                <div class="help-block with-errors" ng-show="invalidPrice || priceUnknown">{{validationMessage}}</div>
+                <div class="help-block with-errors" ng-show="invalidPrice || priceUnknown">{{priceValidationMessage}}</div>
             </div>
         </div>
         <div class="col-lg-5">
