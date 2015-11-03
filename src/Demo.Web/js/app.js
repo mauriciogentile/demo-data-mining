@@ -79,7 +79,7 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
         var param = $.param(getParams());
         $http.get("api/property/price/predict?" + param).then(function (response) {
             processPricePrediction(response.data);
-            console.log(data);
+            console.log(response.data);
         }, function (error) {
             console.log(error);
         });
@@ -96,7 +96,7 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
         var param = $.param(getParams());
         $http.get("api/property/size/predict?" + param).then(function (response) {
             processSizePrediction(response.data);
-            console.log(data);
+            console.log(response.data);
         }, function (error) {
             console.log(error);
         });
