@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using AutoMapper;
 using Demo.Data;
 using FileHelpers;
 using FileHelpers.Events;
-using FileHelpers.Options;
 using Microsoft.Win32;
+using Timer = System.Timers.Timer;
 
 namespace FileImporter
 {
@@ -20,7 +20,7 @@ namespace FileImporter
     {
         private readonly SynchronizationContext synchronizationContext;
         private readonly ObservableCollection<PropertyVm> propertyList = new ObservableCollection<PropertyVm>();
-        private const double acceptableVariation = 0.1;
+        private const double acceptableVariation = 0.2;
 
         public MainWindow()
         {
@@ -56,11 +56,13 @@ namespace FileImporter
 
         async void ProcessFile(object sender, RoutedEventArgs e)
         {
+            ProgressBar1.Maximum = 100;
+
             var filePath = TextBox1.Text;
 
             propertyList.Clear();
 
-            var properties = await Task<IEnumerable<Property>>.Factory.StartNew(() =>
+            var properties = await Task<IList<Property>>.Factory.StartNew(() =>
             {
                 var engine = new FileHelperEngine<Property>();
                 engine.Progress += engine_Progress;
@@ -76,35 +78,39 @@ namespace FileImporter
 
             Mapper.Map<IEnumerable<PropertyVm>>(properties).ToList().ForEach(p => propertyList.Add(p));
 
+            //DataGrid1.Items.Refresh();
+
+            ProgressBar1.Maximum = properties.Count;
             await Task.Delay(TimeSpan.FromSeconds(1)).ContinueWith(t => ValidateValues(properties));
         }
 
         void engine_Progress(object sender, ProgressEventArgs e)
         {
-            synchronizationContext.Send(o =>
-            {
-                ProgressBar1.Value = ((ProgressEventArgs)o).Percent;
-                ProgressBar1.Visibility = ProgressBar1.Value >= ProgressBar1.Maximum ? Visibility.Hidden : Visibility.Visible;
-            }, e);
+            UpdateProgress(e.Percent);
         }
 
-        void ValidateValues(IEnumerable<Property> properties)
+        void ValidateValues(IList<Property> properties)
         {
-            Parallel.ForEach(properties, p =>
+            int progress = 1;
+            const int i = 0;
+            Parallel.For(i, properties.Count - 1, p =>
             {
-                var vm = propertyList.First(x => x.Id == p.Id);
-                var price = p.PredictPrice();
+                var vm = propertyList[p];
+                var property = properties[p];
+                var price = property.PredictPrice();
                 if (price == 0)
                 {
                     vm.Error = "Imposible predecir valor!";
                 }
                 var variaton = price * acceptableVariation;
-                if (Math.Abs(p.Price - price) > variaton)
+                if (Math.Abs(property.Price - price) > variaton)
                 {
                     vm.Error = GetAcceptableRangeString(price);
 
                 }
-                synchronizationContext.Send(o => DataGrid1.Items.Refresh(), null);
+                //synchronizationContext.Send(o => DataGrid1.Items.Refresh(), null);
+                progress++;
+                UpdateProgress(progress);
             });
         }
 
@@ -113,6 +119,15 @@ namespace FileImporter
             var min = value - (value * acceptableVariation);
             var max = value + (value * acceptableVariation);
             return "Rango aceptable de '" + Math.Ceiling(min) + "' a '" + Math.Floor(max) + "'";
+        }
+
+        void UpdateProgress(double progress)
+        {
+            synchronizationContext.Send(o =>
+            {
+                ProgressBar1.Value = (double)o;
+                ProgressBar1.Visibility = ProgressBar1.Value >= ProgressBar1.Maximum ? Visibility.Hidden : Visibility.Visible;
+            }, progress);
         }
     }
 }
