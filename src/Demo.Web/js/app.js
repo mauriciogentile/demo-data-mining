@@ -1,28 +1,32 @@
-﻿var app = angular.module("Zupla", ["ng"]);
+﻿String.prototype.replaceAll = function(str1, str2, ignore) 
+{
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+}
+
+var app = angular.module("Zupla", ["ng"]);
 
 app.controller("newPropertyCtrl", function ($scope, $http) {
-    var acceptableVariation = 0.1;
-
-    $scope.bedrooms = 2;
-    $scope.bathrooms = 1;
+    $scope.bedrooms = "2";
+    $scope.bathrooms = "1";
     $scope.operationType = "Sale";
     $scope.propertyType = "Apartment";
-    $scope.distanceToStation = "";
+    $scope.distanceToStation = 500;
     $scope.squareMts = "";
-    $scope.age = "";
+    $scope.age = 20;
     $scope.zoneReputation = "Good";
     $scope.hasParking = false;
     $scope.withFurniture = false;
     $scope.hasBackyard = false;
     $scope.price = "";
 
-    $scope.invalidPrice = false;
-    $scope.priceUnknown = false;
-    $scope.priceValidationMessage = "";
+    $scope.$invalidPrice = false;
+    $scope.$priceUnknown = false;
+    $scope.$priceValidationMessage = "";
 
-    $scope.invalidSize = false;
-    $scope.unknownSize = false;
-    $scope.sizeValidationMessage = "";
+    $scope.$invalidSize = false;
+    $scope.$unknownSize = false;
+    $scope.$sizeValidationMessage = "";
+    $scope.$logs = [];
 
     $scope.$watch("bedrooms", function () {
         delayExecution(validatePriceAndSize);
@@ -44,7 +48,7 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
         delayExecution(validatePriceAndSize);
     });
 
-    $scope.$watch("distanceToStation", function() {
+    $scope.$watch("distanceToStation", function () {
         delayExecution(validatePrice);
     });
 
@@ -70,15 +74,17 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
     }
 
     function validatePrice() {
-        $scope.invalidPrice = false;
-        $scope.priceUnknown = false;
-        $scope.priceValidationMessage = "";
+        $scope.$invalidPrice = false;
+        $scope.$priceUnknown = false;
+        $scope.$priceValidationMessage = "";
 
         if (!$scope.price) return;
 
         var param = $.param(getParams());
-        $http.get("api/property/price/predict?" + param).then(function (response) {
+        var url = "api/property/price/predict?" + param;
+        $http.get(url).then(function (response) {
             processPricePrediction(response.data);
+            $scope.$logs.splice(0, 0, { params: param.replaceAll("&", " "), data: response.data });
             console.log(response.data);
         }, function (error) {
             console.log(error);
@@ -86,17 +92,17 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
     };
 
     function validateSize() {
-
-        $scope.invalidSize = false;
-        $scope.unknownSize = false;
-        $scope.sieValidationMessage = "";
+        $scope.$invalidSize = false;
+        $scope.$unknownSize = false;
+        $scope.$sizeValidationMessage = "";
 
         if (!$scope.squareMts) return;
 
         var param = $.param(getParams());
-        $http.get("api/property/size/predict?" + param).then(function (response) {
+        var url = "api/property/size/predict?" + param;
+        $http.get(url).then(function (response) {
             processSizePrediction(response.data);
-            console.log(response.data);
+            $scope.$logs.splice(0, 0, { params: param.replaceAll("&", " "), data: response.data });
         }, function (error) {
             console.log(error);
         });
@@ -105,7 +111,7 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
     var getParams = function () {
         var result = {};
         for (var p in $scope) {
-            if (p.substr(0, 1) !== "$" && !$.isFunction($scope[p])) {
+            if (p.substr(0, 1) !== "$" && !$.isFunction($scope[p]) && !$.isArray($scope[p])) {
                 result[p] = $scope[p];
             }
         }
@@ -113,41 +119,40 @@ app.controller("newPropertyCtrl", function ($scope, $http) {
     };
 
     var processPricePrediction = function (prediction) {
-        $scope.invalidPrice = false;
-        $scope.priceValidationMessage = "";
-        $scope.priceUnknown = false;
-        if (prediction == 0) {
+        $scope.$invalidPrice = false;
+        $scope.$priceValidationMessage = "";
+        $scope.$priceUnknown = false;
+        if (prediction.Value <= 0) {
             $scope.priceValidationMessage = "Imposible predecir valor!";
             $scope.priceUnknown = true;
             return;
         }
-        var variaton = prediction * acceptableVariation;
-        if (Math.abs($scope.price - prediction) > variaton) {
-            $scope.invalidPrice = true;
-            $scope.priceValidationMessage = getAcceptableRangeString(prediction);
+        var variaton = prediction.StdDev;
+        if (Math.abs($scope.price - prediction.Value) > variaton) {
+            $scope.$invalidPrice = true;
+            $scope.$priceValidationMessage = getAcceptableRangeString(prediction);
         }
     };
 
     var processSizePrediction = function (prediction) {
-        $scope.invalidSize = false;
-        $scope.sizeValidationMessage = "";
-        $scope.unknownSize = false;
-        if (prediction == 0) {
-            $scope.sizeValidationMessage = "Imposible predecir valor!";
-            $scope.unknownSize = true;
+        $scope.$invalidSize = false;
+        $scope.$sizeValidationMessage = "";
+        $scope.$unknownSize = false;
+        if (prediction.Value <= 0) {
+            $scope.$sizeValidationMessage = "Imposible predecir valor!";
+            $scope.$unknownSize = true;
             return;
         }
-        var variaton = prediction * acceptableVariation;
-        if (Math.abs($scope.squareMts - prediction) > variaton) {
-            $scope.invalidSize = true;
-            $scope.sizeValidationMessage = getAcceptableRangeString(prediction);
+        var variaton = prediction.StdDev;
+        if (Math.abs($scope.squareMts - prediction.Value) > variaton) {
+            $scope.$invalidSize = true;
+            $scope.$sizeValidationMessage = getAcceptableRangeString(prediction);
         }
     };
 
-    var getAcceptableRangeString = function (value) {
-        value = parseInt(value);
-        var min = value - (value * acceptableVariation);
-        var max = value + (value * acceptableVariation);
+    var getAcceptableRangeString = function (prediction) {
+        var min = prediction.Value - prediction.StdDev;
+        var max = prediction.Value + prediction.StdDev;
         return "Rango aceptable de '" + numberWithCommas(Math.ceil(min)) + "' a '" + numberWithCommas(Math.floor(max)) + "'";
     }
 

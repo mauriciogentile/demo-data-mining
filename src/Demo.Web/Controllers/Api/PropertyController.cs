@@ -14,22 +14,16 @@ namespace Demo.Web.Controllers.Api
     {
         [HttpGet]
         [Route("api/property/size/predict")]
-        public HttpResponseMessage ValidateSize([FromUri]Property property)
+        public Prediction ValidateSize([FromUri]Property property)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(property.PredictSize().ToString("D0"))
-            };
+            return property.PredictSize();
         }
 
         [HttpGet]
         [Route("api/property/price/predict")]
-        public HttpResponseMessage PredictPrice([FromUri]Property property)
+        public Prediction PredictPrice([FromUri]Property property)
         {
-            return new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(property.PredictPrice().ToString("D0"))
-            };
+            return property.PredictPrice();
         }
 
         [HttpGet]

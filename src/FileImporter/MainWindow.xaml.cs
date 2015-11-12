@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using AutoMapper;
 using Demo.Data;
 using FileHelpers;
 using FileHelpers.Events;
+using FileImporter;
 using Microsoft.Win32;
-using Timer = System.Timers.Timer;
 
-namespace FileImporter
+namespace Demo.FileImporter
 {
     public partial class MainWindow
     {
         private readonly SynchronizationContext synchronizationContext;
         private readonly ObservableCollection<PropertyVm> propertyList = new ObservableCollection<PropertyVm>();
-        private const double acceptableVariation = 0.2;
 
         public MainWindow()
         {
@@ -97,28 +94,27 @@ namespace FileImporter
             {
                 var vm = propertyList[p];
                 var property = properties[p];
-                var price = property.PredictPrice();
-                if (price == 0)
+                var prediction = property.PredictPrice();
+                if (prediction.Value <= 0)
                 {
                     vm.Error = "Imposible predecir valor!";
                 }
-                var variaton = price * acceptableVariation;
-                if (Math.Abs(property.Price - price) > variaton)
+                var acceptableVariation = prediction.StdDev;
+                var variaton = Math.Abs(property.Price - prediction.Value);
+                if (variaton > acceptableVariation)
                 {
-                    vm.Error = GetAcceptableRangeString(price);
-
+                    vm.Error = GetAcceptableRangeString(prediction);
                 }
-                //synchronizationContext.Send(o => DataGrid1.Items.Refresh(), null);
                 progress++;
                 UpdateProgress(progress);
             });
         }
 
-        static string GetAcceptableRangeString(int value)
+        static string GetAcceptableRangeString(Prediction prediction)
         {
-            var min = value - (value * acceptableVariation);
-            var max = value + (value * acceptableVariation);
-            return "Rango aceptable de '" + Math.Ceiling(min) + "' a '" + Math.Floor(max) + "'";
+            var min = (prediction.Value - prediction.StdDev) < 0 ? 0 : (prediction.Value - prediction.StdDev);
+            var max = prediction.Value + prediction.StdDev;
+            return string.Format("Rango aceptable {0:C0} a {1:C0}", Math.Ceiling((double)min), Math.Floor((double)max));
         }
 
         void UpdateProgress(double progress)

@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using FileImporter.Annotations;
 
-namespace FileImporter
+namespace Demo.FileImporter
 {
     public class PropertyVm : INotifyPropertyChanged
     {
